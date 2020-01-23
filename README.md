@@ -19,4 +19,4 @@ Widgets that are included :
     - SingleUserInput
     - TextControl
     - TextInputDecoration
-    = KeyboardType
+    - KeyboardType
