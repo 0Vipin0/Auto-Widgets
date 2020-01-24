@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextControl extends StatelessWidget {
   @override
@@ -16,6 +17,16 @@ class TextControl extends StatelessWidget {
         CupertinoTextField(
           maxLength: 10,
         ),
+        TextSelectionExample(),
+        /// Adding the TextField Formatter
+        TextField(
+          inputFormatters: [
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              return newValue.copyWith(text: newValue.text?.
+              toUpperCase());
+            }),
+          ],
+        )
       ],
     );
   }
@@ -23,11 +34,10 @@ class TextControl extends StatelessWidget {
 
 class TextSelectionExample extends StatefulWidget {
   @override
-  _TextSelectionExampleState createState() =>
-      _TextSelectionExampleState();
+  _TextSelectionExampleState createState() => _TextSelectionExampleState();
 }
-class _TextSelectionExampleState extends
-State<TextSelectionExample> {
+
+class _TextSelectionExampleState extends State<TextSelectionExample> {
   TextEditingController _controller;
   String _selection;
   @override
@@ -36,6 +46,7 @@ State<TextSelectionExample> {
     _controller = new TextEditingController();
     _controller.addListener(_handleTextSelection);
   }
+
   @override
   void dispose() {
     _controller.removeListener(_handleTextSelection);
@@ -47,44 +58,43 @@ State<TextSelectionExample> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-      TextField(
-      controller: _controller,
-    ),
-    Row(
-    children: <Widget>[
-    RaisedButton(
-    child: Text('Select text [0, 5]'),
-    onPressed: () {
-    setState(() {
-    _controller.selection =
-    TextSelection(baseOffset: 0,
-    extentOffset: 5);
-    });
-    },
-    ),
-    RaisedButton(
-    child: Text('Move cursor to offset 1'),
-    onPressed: () {
-    setState(() {
-    _controller.selection = TextSelection.
-    collapsed(offset: 1);
-    });
-    },
-    ),
-    ],
-    ),
+        TextField(
+          controller: _controller,
+        ),
+        Row(
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Select text [0, 5]'),
+              onPressed: () {
+                setState(() {
+                  _controller.selection =
+                      TextSelection(baseOffset: 0, extentOffset: 5);
+                });
+              },
+            ),
+            RaisedButton(
+              child: Text('Move cursor to offset 1'),
+              onPressed: () {
+                setState(() {
+                  _controller.selection = TextSelection.collapsed(offset: 1);
+                });
+              },
+            ),
+          ],
+        ),
         Text.rich(TextSpan(
           children: [
-          TextSpan(
-          text: 'Selected:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+            TextSpan(
+              text: 'Selected:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             TextSpan(text: _selection ?? ""),
-              ],
-            )),
+          ],
+        )),
       ],
     );
   }
+
   _handleTextSelection() {
     TextSelection selection = _controller.selection;
     if (selection != null) {
